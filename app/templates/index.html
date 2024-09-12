@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starship Titanic Prediction Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-5">Starship Titanic Prediction Form</h2>
+        <form id="prediction-form">
+            <div class="form-row">
+                <!-- PassengerId -->
+                <div class="form-group col-md-6">
+                    <label for="PassengerId">Passenger ID:</label>
+                    <input type="text" class="form-control" id="PassengerId" name="PassengerId" placeholder="Enter Passenger ID" required>
+                </div>
+
+                <!-- HomePlanet -->
+                <div class="form-group col-md-6">
+                    <label for="HomePlanet">Home Planet:</label>
+                    <input type="text" class="form-control" id="HomePlanet" name="HomePlanet" placeholder="Enter Home Planet" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- CryoSleep -->
+                <div class="form-group col-md-6">
+                    <label for="CryoSleep">Cryo Sleep:</label>
+                    <input type="text" class="form-control" id="CryoSleep" name="CryoSleep" placeholder="Enter Cryo Sleep status" required>
+                </div>
+
+                <!-- Cabin -->
+                <div class="form-group col-md-6">
+                    <label for="Cabin">Cabin:</label>
+                    <input type="text" class="form-control" id="Cabin" name="Cabin" placeholder="Enter Cabin" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- Destination -->
+                <div class="form-group col-md-6">
+                    <label for="Destination">Destination:</label>
+                    <input type="text" class="form-control" id="Destination" name="Destination" placeholder="Enter Destination" required>
+                </div>
+
+                <!-- Age -->
+                <div class="form-group col-md-6">
+                    <label for="Age">Age:</label>
+                    <input type="number" class="form-control" id="Age" name="Age" placeholder="Enter Age" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- VIP -->
+                <div class="form-group col-md-6">
+                    <label for="VIP">VIP:</label>
+                    <input type="text" class="form-control" id="VIP" name="VIP" placeholder="Enter VIP status" required>
+                </div>
+
+                <!-- RoomService -->
+                <div class="form-group col-md-6">
+                    <label for="RoomService">Room Service:</label>
+                    <input type="number" class="form-control" id="RoomService" name="RoomService" placeholder="Enter Room Service amount" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- FoodCourt -->
+                <div class="form-group col-md-6">
+                    <label for="FoodCourt">Food Court:</label>
+                    <input type="number" class="form-control" id="FoodCourt" name="FoodCourt" placeholder="Enter Food Court amount" required>
+                </div>
+
+                <!-- ShoppingMall -->
+                <div class="form-group col-md-6">
+                    <label for="ShoppingMall">Shopping Mall:</label>
+                    <input type="number" class="form-control" id="ShoppingMall" name="ShoppingMall" placeholder="Enter Shopping Mall amount" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- Spa -->
+                <div class="form-group col-md-6">
+                    <label for="Spa">Spa:</label>
+                    <input type="number" class="form-control" id="Spa" name="Spa" placeholder="Enter Spa amount" required>
+                </div>
+
+                <!-- VRDeck -->
+                <div class="form-group col-md-6">
+                    <label for="VRDeck">VR Deck:</label>
+                    <input type="number" class="form-control" id="VRDeck" name="VRDeck" placeholder="Enter VR Deck amount" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- Name -->
+                <div class="form-group col-md-12">
+                    <label for="Name">Name:</label>
+                    <input type="text" class="form-control" id="Name" name="Name" placeholder="Enter Name" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Predict</button>
+        </form>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Prediction Result</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="resultContent">
+                    <!-- Prediction result will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let formData = {};
+            new FormData(event.target).forEach((value, key) => {
+                formData[key] = value;
+            });
+            
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultContent = data.prediction === 0 
+                    ? "The passenger was not transported." 
+                    : "The passenger was transported.";
+                document.getElementById('resultContent').innerText = resultContent;
+                $('#resultModal').modal('show');
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
