@@ -3,13 +3,8 @@ joblib
 gunicorn
 numpy
 pandas
-matplotlib
-seaborn
 scipy
 scikit-learn
-optuna
-shap
 catboost
 xgboost
 lightgbm
-gender-guesser
